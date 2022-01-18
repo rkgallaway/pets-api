@@ -10,23 +10,24 @@ const express = require('express');
 const app = express();
 
 // middleware if necessary goes here AFTER app has been instantiated
-
-const PORT = 3002;
+const cors = require('cors');
+require('dotenv').config();
+const PORT = process.env.PORT || 3002;
 
 //require in our json TODAY, will hit weather API tomorrow
 const petData = require('./data/pets.json');
 
-// our most basic route.  hit by going to http://localhost:3002
+// our most basic route.  hit by going to http://localhost:3001
 app.get('/', (request, response) => {
   response.send('Hello, From our Server!');
 });
 
-// hit route by going to http://localhost:3002/banana
+// hit route by going to http://localhost:3001/banana
 app.get('/banana', (request, response) => {
   response.send('mmmmmm, bananas!')
 });
 
-// to hit this route:  http://localhost:3002/sayHello?name=Ryan
+// to hit this route:  http://localhost:3001/sayHello?name=Ryan
 app.get('/sayHello', (request, response) => {
   // we access query parameters using the request object
   // specifically:  request.query.<parameter-name>
@@ -38,7 +39,7 @@ app.get('/sayHello', (request, response) => {
   response.status(200).send(`Hello ${name}, from the Server!`);
 });
 
-// to hit this route: http://localhost:3002/throw-an-error
+// to hit this route: http://localhost:3001/throw-an-error
 app.get('/throw-an-error', (request, response)=> {
   // when something bad happens, you can "throw" an error and the error handler middleware will catch and handle it
   throw 'You did something really, really bad!'
@@ -48,10 +49,10 @@ app.get('/throw-an-error', (request, response)=> {
 // _____________________
 
 // create route '/pets', your will be '/weather' that uses json to send a tailored response
-// hit this route:  http://localhost:3002/pets?species=dog
+// hit this route:  http://localhost:3001/pets?species=dog
 app.get('/pets', (request, response) => {
   let species = request.query.species;
-  
+
   // gives proof of life in the TERMINAL
   console.log(species);
   let filteredPets = petData.filter(pet => pet.species === species);

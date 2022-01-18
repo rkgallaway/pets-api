@@ -1,0 +1,22 @@
+{
+  "name": "pets-api",
+  "version": "1.0.0",
+  "description": "A demo using pet info",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rkgallaway/pets-api.git"
+  },
+  "author": "Ryan Gallaway / Code Fellows",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rkgallaway/pets-api/issues"
+  },
+  "homepage": "https://github.com/rkgallaway/pets-api#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}

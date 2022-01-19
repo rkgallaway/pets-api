@@ -11,11 +11,13 @@ const app = express();
 
 // middleware if necessary goes here AFTER app has been instantiated
 const cors = require('cors');
+app.use(cors());
 require('dotenv').config();
 const PORT = process.env.PORT || 3002;
 
 //require in our json TODAY, will hit weather API tomorrow
 const petData = require('./data/pets.json');
+const axios = require('axios');
 
 // our most basic route.  hit by going to http://localhost:3001
 app.get('/', (request, response) => {
@@ -42,8 +44,8 @@ app.get('/sayHello', (request, response) => {
 // to hit this route: http://localhost:3001/throw-an-error
 app.get('/throw-an-error', (request, response)=> {
   // when something bad happens, you can "throw" an error and the error handler middleware will catch and handle it
-  throw 'You did something really, really bad!'
-})
+  throw 'You did something really, really bad!';
+});
 
 // above:  some useful thins
 // _____________________
@@ -60,6 +62,19 @@ app.get('/pets', (request, response) => {
   response.send(groomedPetData);
 });
 
+// hit route at:  http://localHost:3001/images?imageType=kittens
+app.get('/images', async (request, response) => {
+  let imageType = request.query.imageType;
+  // console.log(imageType);
+  let url = `https://api.unsplash.com/search/photos?query=${imageType}&client_id=${process.env.UNSPLASH_ACCESS_KEY}`;
+
+  let pictureResults = await axios.get(url);
+
+  // our data lives at pictureResults.data.results.  "results" is because of hoe unsplash API works.
+  response.send(pictureResults.data.results.map(pic => new Picture(pic)));
+
+});
+
 // catch all route MUST BE the last route in the file
 // we can control the messaging for any mistakenly hit route that doesn't exist
 app.get('*', (request, response) => {
@@ -70,6 +85,15 @@ class Pet {
   constructor(pet){
     this.name = pet.name;
     this.breed = pet.breed;
+  }
+}
+
+class Picture {
+  constructor(pic){
+    this.src = pic.urls.regular;
+    this.alt = pic.alt_description;
+    this.description = pic.description;
+    this.photographer = pic.user.name;
   }
 }
 
